@@ -1,26 +1,16 @@
+/* Add Google Font Import */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
-:root {
-    --bg-color: #f0f2f5; /* Light mode background */
-    --text-color: #333;  /* Light mode text color */
-}
 
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    background-color: #f0f2f5;
+    color: #333;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-body.dark-mode {
-    --bg-color: #121212; /* Dark mode background */
-    --text-color: #f4f4f4; /* Light text for dark mode */
 }
 
 .container {
@@ -30,11 +20,12 @@ body.dark-mode {
     border-radius: 8px;
     max-width: 600px;
     width: 100%;
+    margin-top: 20px;
 }
 
-body.dark-mode .container {
-    background: #1e1e1e; /* Darker container background for dark mode */
-    color: var(--text-color); /* Ensure text color matches dark mode */
+header {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 header h1 {
@@ -42,14 +33,46 @@ header h1 {
 }
 
 .advice-of-day {
-    margin: 10px 0;
     padding: 15px;
-    background: #e6ffe6;
+    background-color: #e6ffe6;
     border: 1px solid #d4f4d4;
-    border-radius: 8px;
+    border-radius: 5px;
+    margin-bottom: 20px;
 }
 
-body.dark-mode .advice-of-day {
-    background: #2e2e2e; /* Subtle background for dark mode */
-    border: 1px solid #444;
+.post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+select, textarea, button {
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#theme-toggle {
+    margin-left: 10px;
+}
+
+.reactions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 20px;
 }
