@@ -1,61 +1,78 @@
-:root {
-    --bg-color: #f4f4f4;
-    --text-color: #333;
-    --card-bg: white;
-    --border-color: #ddd;
-}
-
-body.dark-theme {
-    --bg-color: #333;
-    --text-color: #f4f4f4;
-    --card-bg: #444;
-    --border-color: #666;
-}
+/* Add Google Font Import */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: background-color 0.3s, color 0.3s;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
 .container {
-    max-width: 800px;
-    margin: 0 auto;
+    background: white;
     padding: 20px;
-}
-
-.post {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    margin-bottom: 15px;
-    padding: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    max-width: 600px;
+    width: 100%;
+    margin-top: 20px;
 }
 
-.post-actions {
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    color: #4CAF50;
+}
+
+.advice-of-day {
+    padding: 15px;
+    background-color: #e6ffe6;
+    border: 1px solid #d4f4d4;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.post-form {
     display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+    flex-direction: column;
+    gap: 10px;
+}
+
+select, textarea, button {
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#theme-toggle {
+    margin-left: 10px;
 }
 
 .reactions button {
     background: none;
     border: none;
     cursor: pointer;
-    margin-right: 10px;
-}
-
-.advice-of-day {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-}
-
-.header-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
+    padding: 5px;
+    font-size: 20px;
 }
