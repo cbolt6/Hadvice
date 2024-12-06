@@ -2,10 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hadvice</title>
-    <!-- Link to static CSS file -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
@@ -24,7 +22,7 @@
 
         <div class="advice-of-day" id="advice-of-day">
             <h2>Advice of the Day</h2>
-            <p>CS50 is the best!</p>
+            <!-- Dynamic content will be inserted here -->
         </div>
 
         <div class="post-form">
@@ -42,7 +40,6 @@
             <!-- Posts will be dynamically added here -->
         </div>
     </div>
-    <!-- Link to static JavaScript file -->
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="script.js"></script>
 </body>
 </html>
