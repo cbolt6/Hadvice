@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
 :root {
-    --bg-color: #f0f2f5;
-    --text-color: #333;
+    --bg-color: #f0f2f5; /* Light mode background */
+    --text-color: #333;  /* Light mode text color */
 }
 
 body {
@@ -19,8 +19,8 @@ body {
 }
 
 body.dark-mode {
-    --bg-color: #121212;
-    --text-color: #121212;
+    --bg-color: #121212; /* Dark mode background */
+    --text-color: #f4f4f4; /* Light text for dark mode */
 }
 
 .container {
@@ -30,6 +30,11 @@ body.dark-mode {
     border-radius: 8px;
     max-width: 600px;
     width: 100%;
+}
+
+body.dark-mode .container {
+    background: #1e1e1e; /* Darker container background for dark mode */
+    color: var(--text-color); /* Ensure text color matches dark mode */
 }
 
 header h1 {
@@ -42,4 +47,9 @@ header h1 {
     background: #e6ffe6;
     border: 1px solid #d4f4d4;
     border-radius: 8px;
+}
+
+body.dark-mode .advice-of-day {
+    background: #2e2e2e; /* Subtle background for dark mode */
+    border: 1px solid #444;
 }
