@@ -6,7 +6,7 @@ import random
 
 app = Flask(__name__)
 
-# In-memory storage (replace with a database in production)
+# In-memory storage (replace with database in production)
 posts = []
 
 def generate_anonymous_id():
@@ -29,47 +29,38 @@ def create_post():
         'content': data['content'],
         'timestamp': now.isoformat(),
         'anonymous_id': generate_anonymous_id(),
-        'upvotes': 0,
-        'downvotes': 0,
+        'reactions': {'🤔': 0, '💡': 0, '😂': 0},
         'comments': []
     }
     posts.insert(0, post)
     return jsonify({'success': True, 'anonymous_id': post['anonymous_id']})
 
-@app.route('/post', methods=['POST'])
-def create_post():
-    data = request.json  # Parse JSON from the request
-    if not data or 'category' not in data or 'content' not in data:
-        return jsonify({'success': False, 'error': 'Invalid data'}), 400
-
+@app.route('/posts')
+def get_posts():
+    time_filter = request.args.get('time', 'all')
     now = datetime.now()
-    post = {
-        'id': str(uuid.uuid4()),
-        'category': data['category'],
-        'content': data['content'],
-        'timestamp': now.isoformat(),
-        'anonymous_id': generate_anonymous_id(),
-        'upvotes': 0,
-        'downvotes': 0,
-        'comments': []
-    }
-    posts.insert(0, post)  # Add the post to the in-memory storage
-    return jsonify({'success': True, 'anonymous_id': post['anonymous_id']})
+    
+    filtered_posts = posts
+    if time_filter == '24h':
+        filtered_posts = [p for p in posts if now - datetime.fromisoformat(p['timestamp']) <= timedelta(hours=24)]
+    elif time_filter == 'week':
+        filtered_posts = [p for p in posts if now - datetime.fromisoformat(p['timestamp']) <= timedelta(weeks=1)]
+    elif time_filter == 'month':
+        filtered_posts = [p for p in posts if now - datetime.fromisoformat(p['timestamp']) <= timedelta(days=30)]
+    
+    return jsonify(filtered_posts)
 
-@app.route('/vote', methods=['POST'])
-def vote():
+@app.route('/react', methods=['POST'])
+def react_to_post():
     data = request.json
     post_id = data['post_id']
-    vote_type = data['vote_type']
-
+    reaction = data['reaction']
+    
     for post in posts:
         if post['id'] == post_id:
-            if vote_type == "up":
-                post['upvotes'] += 1
-            elif vote_type == "down":
-                post['downvotes'] += 1
+            post['reactions'][reaction] += 1
             return jsonify({'success': True})
-
+    
     return jsonify({'success': False}), 404
 
 @app.route('/comment', methods=['POST'])
@@ -77,7 +68,7 @@ def add_comment():
     data = request.json
     post_id = data['post_id']
     comment_content = data['content']
-
+    
     for post in posts:
         if post['id'] == post_id:
             comment = {
@@ -86,21 +77,22 @@ def add_comment():
                 'anonymous_id': generate_anonymous_id(),
                 'timestamp': datetime.now().isoformat()
             }
-            post['comments'].append(comment)
+            post['comments'].insert(0, comment)
             return jsonify({'success': True, 'anonymous_id': comment['anonymous_id']})
-
+    
     return jsonify({'success': False}), 404
 
 @app.route('/advice-of-day')
 def get_advice_of_day():
-    # Advice of the Day: most upvoted post in the last 24 hours
+    # Simple implementation: most reacted post in last 24 hours
     now = datetime.now()
     day_posts = [p for p in posts if now - datetime.fromisoformat(p['timestamp']) <= timedelta(hours=24)]
-
+    
     if not day_posts:
         return jsonify(None)
+    
+    return jsonify(max(day_posts, key=lambda p: sum(p['reactions'].values())))
 
-    return jsonify(max(day_posts, key=lambda p: p.get('upvotes', 0)))
-
+# The correct __main__ block should be at the bottom of the script
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
