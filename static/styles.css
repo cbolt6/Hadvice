@@ -20,7 +20,7 @@ body {
 
 body.dark-mode {
     --bg-color: #121212;
-    --text-color: #f4f4f4;
+    --text-color: #121212;
 }
 
 .container {

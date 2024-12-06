@@ -36,20 +36,25 @@ def create_post():
     posts.insert(0, post)
     return jsonify({'success': True, 'anonymous_id': post['anonymous_id']})
 
-@app.route('/posts')
-def get_posts():
-    time_filter = request.args.get('time', 'all')
+@app.route('/post', methods=['POST'])
+def create_post():
+    data = request.json  # Parse JSON from the request
+    if not data or 'category' not in data or 'content' not in data:
+        return jsonify({'success': False, 'error': 'Invalid data'}), 400
+
     now = datetime.now()
-
-    filtered_posts = posts
-    if time_filter == 'hour':
-        filtered_posts = [p for p in posts if now - datetime.fromisoformat(p['timestamp']) <= timedelta(hours=1)]
-    elif time_filter == 'day':
-        filtered_posts = [p for p in posts if now - datetime.fromisoformat(p['timestamp']) <= timedelta(days=1)]
-    elif time_filter == 'week':
-        filtered_posts = [p for p in posts if now - datetime.fromisoformat(p['timestamp']) <= timedelta(weeks=1)]
-
-    return jsonify(filtered_posts)
+    post = {
+        'id': str(uuid.uuid4()),
+        'category': data['category'],
+        'content': data['content'],
+        'timestamp': now.isoformat(),
+        'anonymous_id': generate_anonymous_id(),
+        'upvotes': 0,
+        'downvotes': 0,
+        'comments': []
+    }
+    posts.insert(0, post)  # Add the post to the in-memory storage
+    return jsonify({'success': True, 'anonymous_id': post['anonymous_id']})
 
 @app.route('/vote', methods=['POST'])
 def vote():
