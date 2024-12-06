@@ -1,0 +1,61 @@
+:root {
+    --bg-color: #f4f4f4;
+    --text-color: #333;
+    --card-bg: white;
+    --border-color: #ddd;
+}
+
+body.dark-theme {
+    --bg-color: #333;
+    --text-color: #f4f4f4;
+    --card-bg: #444;
+    --border-color: #666;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.post {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.reactions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.advice-of-day {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
