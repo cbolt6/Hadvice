@@ -2,9 +2,11 @@
 
 ## Overview
 
-Hadvice is a Flask-based web application designed to provide users with an anonymous platform to share, engage with, and view advice. The app allows users to post advice in predefined categories, interact with posts via reactions and comments, and view the "Advice of the Day," which highlights the most upvoted advice from the past 24 hours. This design document takes you through the technical implementation of Hadvice, discussing the architecture, key features, design decisions, and future scalability considerations.
+Hadvice is a Flask-based web application designed to provide users with an anonymous platform to share, engage with, and view advice. The app allows users to post advice in predefined categories, interact with posts via reactions and comments, and view the "Advice of the Day," which highlights the most upvoted advice from the past 24 hours. The posts are ranked dynamically by their net value (upvotes minus downvotes), ensuring the most impactful advice is prioritized for visibility.
 
-Hadvice was built with simplicity and usability in mind, using Flask for the backend and a combination of HTML, CSS, and JavaScript for the front-end. By using a JSON file for data storage, the application prioritizes rapid development and debugging during the prototyping stage. Future scalability considerations, including database integration, are also discussed.
+The application incorporates a time filter feature, enabling users to view advice from specific periods (e.g., the last hour, day, or week). This design document outlines the architecture, key features, design decisions, and scalability considerations.
+
+Hadvice prioritizes simplicity and usability, using Flask for the backend and a combination of HTML, CSS, and JavaScript for the front end. A JSON file is used for data storage during the prototyping stage, with plans for database integration in future iterations.
 
 ---
 
@@ -29,6 +31,7 @@ The Hadvice application follows a **Model-View-Controller (MVC)** architecture t
         "comments": []
     }
     ```
+-Posts are sorted by net value (upvotes - downvotes) and timestamp. This ensures that advice with higher engagement appears at the top, within the selected time range.
 - JSON was chosen for its human-readable format and ease of debugging during the development phase. It allows for rapid iteration without the overhead of setting up a database.
 - However, JSON lacks concurrency control and is not optimized for scalability. Transitioning to a relational database is a planned enhancement.
 
@@ -36,7 +39,7 @@ The Hadvice application follows a **Model-View-Controller (MVC)** architecture t
 - The front-end consists of an interactive HTML interface styled with CSS for a clean and responsive design.
 - JavaScript powers dynamic updates to the DOM, enabling real-time interaction with minimal latency.
 - Flask’s `render_template` function is used to serve the main HTML page (`index.html`).
-  Key components of the UI include: A post submission form. A posts container dynamically populated with posts. A time filter dropdown to filter posts by range. A dark mode toggle for accessibility.
+  Key components of the UI include: A post submission form. A posts container dynamically populated with posts. A net ranking score of each post appearing in descending order. A time filter dropdown to filter posts by range. A dark mode toggle for accessibility.
 
 
 ### 3. **Controller**
@@ -51,9 +54,9 @@ The Hadvice application follows a **Model-View-Controller (MVC)** architecture t
 The backend is implemented in Flask, providing an efficient and lightweight framework for routing and server-side logic.
 
 #### **Core Endpoints**
-- **`GET /`**: Serves the front-end interface by rendering `index.html`.
+- **`GET /`**: Serves the front-end interface by rendering `index.html`. Sorts the filtered posts by net value (upvotes - downvotes) in descending order, with ties resolved by timestamp (most recent first).
 - **`POST /post`**: Accepts new posts, validates inputs, generates an `anonymous_id`, and saves the post to the JSON file.
-- **`GET /posts`**: Retrieves posts filtered by a time range (`all`, `hour`, `day`, `week`).
+- - **`GET /posts`**: Retrieves posts filtered by a time range (`all`, `hour`, `day`, `week`) and sorts them by net value (upvotes - downvotes) in descending order, with ties resolved by timestamp.
 - **`POST /react`**: Updates reaction counts (upvotes or downvotes) for a specific post.
 - **`POST /comment`**: Adds a comment to a specific post.
 - **`GET /advice-of-day`**: Identifies and returns the most upvoted post from the past 24 hours.
@@ -120,6 +123,7 @@ The front-end interface provides users with an intuitive and responsive way to i
 ---
 
 ### 3. **Data Filtering and Advice of the Day**
+- Ranking: Filtered posts are ranked by net value, ensuring the most engaging advice appears at the top. Filtering happens first, followed by sorting.
 - Posts are filtered based on their timestamps using Python’s `datetime` module.
 - "Advice of the Day" is calculated by identifying the post with the highest upvotes in the past 24 hours:
     ```python
