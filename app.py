@@ -68,8 +68,17 @@ def get_posts():
     # Log the filtered posts
     print(f"Filtered posts ({len(filtered_posts)}): {filtered_posts}")
 
-    # Sort posts by timestamp (most recent first)
-    filtered_posts.sort(key=lambda p: datetime.fromisoformat(p['timestamp']), reverse=True)
+    # Sort posts by net value (upvotes - downvotes), then by timestamp (most recent first)
+    filtered_posts.sort(
+        key=lambda p: (
+            p['reactions']['upvotes'] - p['reactions']['downvotes'],  # Primary sort: net value
+            datetime.fromisoformat(p['timestamp'])  # Secondary sort: timestamp
+        ),
+        reverse=True  # Sort in descending order
+    )
+
+    # Log the sorted posts
+    print(f"Sorted posts ({len(filtered_posts)}): {filtered_posts}")
     return jsonify(filtered_posts)
 
 @app.route('/react', methods=['POST'])
