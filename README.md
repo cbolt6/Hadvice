@@ -4,14 +4,18 @@ Hadvice is a Flask-based web application that allows users to share and view adv
 
 ## Table of Contents
 
-1. [Features](#features)
-2. [Installation](#installation)
-3. [Usage](#usage)
-4. [API Endpoints](#api-endpoints)
-5. [File Structure](#file-structure)
-6. [Known Issues](#known-issues)
-7. [Future Enhancements](#future-enhancements)
+1. [Youtube Link](#youtube-link)
+2. [Features](#features)
+3. [Installation](#installation)
+4. [Usage](#usage)
+5. [API Endpoints](#api-endpoints)
+6. [File Structure](#file-structure)
+7. [Known Issues](#known-issues)
+8. [Future Enhancements](#future-enhancements)
 
+## Youtube Link 
+- https://youtu.be/ItIzVK-Gkf0
+  
 ## Features
 
 - **Anonymous Posting:** Users can submit advice anonymously, categorized into predefined groups (Clubs, Courses, Socials, Miscellaneous).
