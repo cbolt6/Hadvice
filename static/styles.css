@@ -1,7 +1,7 @@
 /* Add Google Font Import */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-/* Light Mode (Default) */
+/* General Styles */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #f0f2f5;
@@ -14,6 +14,7 @@ body {
     min-height: 100vh;
 }
 
+/* Container */
 .container {
     background: white;
     padding: 20px;
@@ -24,6 +25,7 @@ body {
     margin-top: 20px;
 }
 
+/* Header */
 header {
     text-align: center;
     margin-bottom: 20px;
@@ -31,20 +33,23 @@ header {
 
 header h1 {
     color: #4CAF50;
+    margin: 0;
 }
 
-.advice-of-day {
-    padding: 15px;
-    background-color: #e6ffe6;
-    border: 1px solid #d4f4d4;
-    border-radius: 5px;
-    margin-bottom: 20px;
+.header-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
 }
 
+/* Form Styles */
 .post-form {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin-bottom: 20px;
 }
 
 select, textarea, button {
@@ -52,15 +57,19 @@ select, textarea, button {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ddd;
+    outline: none;
+    resize: none;
+}
+
+textarea {
+    height: 100px;
 }
 
 button {
     background-color: #4CAF50;
     color: white;
-    cursor: pointer;
     border: none;
-    padding: 10px;
-    border-radius: 5px;
+    cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
@@ -68,19 +77,132 @@ button:hover {
     background-color: #45a049;
 }
 
+/* Toggle Theme Button */
 #theme-toggle {
-    margin-left: 10px;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background: #e0e0e0;
+    color: #333; /* Improved readability in light mode */
+    cursor: pointer;
+}
+
+#theme-toggle:hover {
+    background: #d6d6d6;
+}
+
+body.dark-theme #theme-toggle {
+    background: #333;
+    color: #f4f4f4;
+}
+
+/* Posts Container */
+#posts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Post Styles */
+.post {
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.post-header strong {
+    font-size: 16px;
+    color: #4CAF50;
+}
+
+.anonymous-id {
+    font-size: 12px;
+    color: #777;
+}
+
+.post p {
+    font-size: 14px;
+    color: #333;
+    margin: 10px 0;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.post-actions span {
+    font-size: 12px;
+    color: #555;
+}
+
+/* Reaction Buttons */
+.reactions {
+    display: flex;
+    gap: 10px;
 }
 
 .reactions button {
-    background: none;
+    font-size: 16px;
+    padding: 5px 10px;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
-    padding: 5px;
-    font-size: 20px;
+    color: white;
 }
 
-/* Dark Mode */
+.reactions .thumbs-up {
+    background-color: #4CAF50;
+}
+
+.reactions .thumbs-down {
+    background-color: #f44336;
+}
+
+/* Comment Section */
+.comments-section {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.comments-section textarea {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.comments-section button {
+    font-size: 14px;
+    padding: 5px 10px;
+}
+
+.comments {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comment {
+    background: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Dark Mode Styles */
 body.dark-theme {
     background-color: #121212;
     color: #f4f4f4;
@@ -97,4 +219,39 @@ body.dark-theme button {
 
 body.dark-theme button:hover {
     background-color: #2e6e31;
+}
+
+body.dark-theme .post {
+    background: #2a2a2a;
+    border-color: #444;
+}
+
+body.dark-theme .post-header strong {
+    color: #81C784;
+}
+
+body.dark-theme .post p {
+    color: #e0e0e0;
+}
+
+body.dark-theme .post-actions span {
+    color: #bbb;
+}
+
+body.dark-theme .reactions .thumbs-up {
+    background-color: #66BB6A;
+}
+
+body.dark-theme .reactions .thumbs-down {
+    background-color: #EF5350;
+}
+
+body.dark-theme .comments-section {
+    border-top-color: #555;
+}
+
+body.dark-theme .comment {
+    background: #333;
+    border-color: #555;
+    color: #ddd;
 }

@@ -1,4 +1,5 @@
 import os
+import json
 from flask import Flask, request, jsonify, render_template
 from datetime import datetime, timedelta
 import uuid
@@ -6,9 +7,22 @@ import random
 
 app = Flask(__name__)
 
-# In-memory storage (replace with database in production)
-posts = []
+# File to store posts persistently
+DATA_FILE = 'data.json'
 
+# Load existing data or initialize an empty list
+if os.path.exists(DATA_FILE):
+    with open(DATA_FILE, 'r') as f:
+        posts = json.load(f)
+else:
+    posts = []
+
+# Save data to the file
+def save_data():
+    with open(DATA_FILE, 'w') as f:
+        json.dump(posts, f)
+
+# Generate a random anonymous ID
 def generate_anonymous_id():
     adjectives = ['Purple', 'Blue', 'Green', 'Red', 'Silver', 'Golden']
     animals = ['Fox', 'Wolf', 'Eagle', 'Lion', 'Shark', 'Owl']
@@ -29,25 +43,33 @@ def create_post():
         'content': data['content'],
         'timestamp': now.isoformat(),
         'anonymous_id': generate_anonymous_id(),
-        'reactions': {'🤔': 0, '💡': 0, '😂': 0},
+        'reactions': {'upvotes': 0, 'downvotes': 0},
         'comments': []
     }
-    posts.insert(0, post)
+    posts.insert(0, post)  # Add the new post to the top
+    save_data()  # Save updated data
     return jsonify({'success': True, 'anonymous_id': post['anonymous_id']})
 
 @app.route('/posts')
 def get_posts():
     time_filter = request.args.get('time', 'all')
+    print(f"Time filter received: {time_filter}")  # Log time filter
     now = datetime.now()
-    
     filtered_posts = posts
-    if time_filter == '24h':
-        filtered_posts = [p for p in posts if now - datetime.fromisoformat(p['timestamp']) <= timedelta(hours=24)]
+
+    # Filter posts based on time range
+    if time_filter == 'hour':
+        filtered_posts = [p for p in posts if now - datetime.fromisoformat(p['timestamp']) <= timedelta(hours=1)]
+    elif time_filter == 'day':
+        filtered_posts = [p for p in posts if now - datetime.fromisoformat(p['timestamp']) <= timedelta(days=1)]
     elif time_filter == 'week':
         filtered_posts = [p for p in posts if now - datetime.fromisoformat(p['timestamp']) <= timedelta(weeks=1)]
-    elif time_filter == 'month':
-        filtered_posts = [p for p in posts if now - datetime.fromisoformat(p['timestamp']) <= timedelta(days=30)]
-    
+
+    # Log the filtered posts
+    print(f"Filtered posts ({len(filtered_posts)}): {filtered_posts}")
+
+    # Sort posts by timestamp (most recent first)
+    filtered_posts.sort(key=lambda p: datetime.fromisoformat(p['timestamp']), reverse=True)
     return jsonify(filtered_posts)
 
 @app.route('/react', methods=['POST'])
@@ -55,44 +77,62 @@ def react_to_post():
     data = request.json
     post_id = data['post_id']
     reaction = data['reaction']
-    
+
+    # Find the post by ID and update the reactions
     for post in posts:
         if post['id'] == post_id:
-            post['reactions'][reaction] += 1
+            if reaction == 'upvote':
+                post['reactions']['upvotes'] += 1
+            elif reaction == 'downvote':
+                post['reactions']['downvotes'] += 1
+            save_data()  # Save updated data
             return jsonify({'success': True})
-    
+
     return jsonify({'success': False}), 404
 
 @app.route('/comment', methods=['POST'])
 def add_comment():
     data = request.json
     post_id = data['post_id']
-    comment_content = data['content']
-    
+    content = data['content']
+
+    # Find the post by ID and add the comment
     for post in posts:
         if post['id'] == post_id:
             comment = {
                 'id': str(uuid.uuid4()),
-                'content': comment_content,
+                'content': content,
                 'anonymous_id': generate_anonymous_id(),
                 'timestamp': datetime.now().isoformat()
             }
-            post['comments'].insert(0, comment)
+            post['comments'].append(comment)
+            save_data()  # Save updated data
             return jsonify({'success': True, 'anonymous_id': comment['anonymous_id']})
-    
+
     return jsonify({'success': False}), 404
 
 @app.route('/advice-of-day')
 def get_advice_of_day():
-    # Simple implementation: most reacted post in last 24 hours
     now = datetime.now()
-    day_posts = [p for p in posts if now - datetime.fromisoformat(p['timestamp']) <= timedelta(hours=24)]
-    
+    # Get posts from the last 24 hours
+    day_posts = [p for p in posts if now - datetime.fromisoformat(p['timestamp']) <= timedelta(days=1)]
+
     if not day_posts:
+        print("No posts found in the last 24 hours.")
         return jsonify(None)
     
-    return jsonify(max(day_posts, key=lambda p: sum(p['reactions'].values())))
+    # Select the post with the highest upvotes
+    most_liked_post = max(day_posts, key=lambda p: p['reactions']['upvotes'], default=None)
+    print(f"Most liked post: {most_liked_post}")
+    return jsonify(most_liked_post)
 
-# The correct __main__ block should be at the bottom of the script
+@app.route('/clear', methods=['POST'])
+def clear_data():
+    global posts
+    posts = []
+    save_data()
+    return jsonify({'success': True, 'message': 'All posts have been cleared.'})
+
+# Run the application
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
